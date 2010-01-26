@@ -1,15 +1,15 @@
 //
-//  FirstPhoneGapAppDelegate.m
-//  FirstPhoneGap
+//  GeoGapAppDelegate.m
+//  GeoGap
 //
 //  Created by Jonathan Hoffman on 1/25/10.
 //  Copyright __MyCompanyName__ 2010. All rights reserved.
 //
 
-#import "FirstPhoneGapAppDelegate.h"
+#import "GeoGapAppDelegate.h"
 #import "PhoneGapViewController.h"
 
-@implementation FirstPhoneGapAppDelegate
+@implementation GeoGapAppDelegate
 
 - (id) init
 {	

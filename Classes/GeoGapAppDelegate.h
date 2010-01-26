@@ -1,5 +1,5 @@
 //
-//  FirstPhoneGapAppDelegate.h
+//  GeoGapAppDelegate.h
 //  FirstPhoneGap
 //
 //  Created by Jonathan Hoffman on 1/25/10.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PhoneGapDelegate.h"
 
-@interface FirstPhoneGapAppDelegate : PhoneGapDelegate {
+@interface GeoGapAppDelegate : PhoneGapDelegate {
 }
 
 @end
