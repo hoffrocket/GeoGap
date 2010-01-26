@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+	<!-- Change this if you want to allow scaling -->
+    <meta name="viewport" content="width=320; user-scalable=no" />
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+    <title>FirstPhoneGap</title>
+	
+	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+	<script type="text/javascript" charset="utf-8" src="json2.js"></script>
+	<script type="text/javascript" charset="utf-8" src="jquery-1.4.js"></script>
+	<script type="text/javascript" charset="utf-8">
+
+
+	// If you want to prevent dragging, uncomment this section
+	/**
+	function preventBehavior(e) 
+	{ 
+      e.preventDefault(); 
+	};
+	document.addEventListener("touchmove", preventBehavior, false);
+	*/
+	
+	function onBodyLoad()
+	{
+		document.addEventListener("deviceready",onDeviceReady,false);
+	}
+	
+	/* When this function is called, PhoneGap has been initialized and is ready to roll */
+	function onDeviceReady()
+	{
+		setHtml("deviceUUID", device.uuid);
+	}
+	
+	function setHtml(id, html){
+		//document.getElementById(id).innerHTML = html;
+		$("#" + id).html(html);
+	}
+	
+	//Near Bryant Park, NYC
+	var lastPos = {
+		coords: {
+			latitude: 40.752666,
+			longitude: -73.980025
+		}
+	};
+	
+	function updateLocation(){
+		debug.log("clicked update location");
+		var win = function(p){
+			lastPos = p;
+			console.log("Got location " +  p.coords.latitude + " " +  p.coords.longitude);
+			setHtml("lat", p.coords.latitude);
+			setHtml("long", p.coords.longitude);
+		}
+		
+		var fail = function(){
+			debug.error('could not get the location');
+
+		}
+		navigator.geolocation.getCurrentPosition(win, fail);
+		return false;
+	}
+	
+	function getNearby(){
+		debug.log("clicked nearby");
+		var query = {
+			"lat": lastPos.coords.latitude,
+			"lon": lastPos.coords.longitude,
+			"radius": ".2km",
+			"limit":20,
+			"entity": [{
+				"guid":null,
+				"type":"business",
+				"view.listing":{
+						"a:verticals":"restaurants",
+						"name":null
+				}
+			}]
+		};
+		var endpoint = "http://api.geoapi.com/v1/q?q=" + escape(JSON.stringify(query)) + "&apikey=demo";
+		debug.log("connecting to endpoint " + endpoint);
+		$.getJSON(endpoint, function(data){
+			debug.log("got a result from geoapi");
+			if (data.entity){
+				var nearby = $("#nearby").empty();
+				$.each(data.entity, function(){
+					nearby.append("<li>"+this["view.listing"].name +"</li>");
+				});
+			}
+		});
+		return false;
+	}
+    </script>
+  </head>
+  <body onload="onBodyLoad()">
+  	<a href="#" onclick="updateLocation();" >Update Location.</a><br/>
+		Latitude: <span id="lat"></span><br/>
+		Longitude: <span id="long"></span>
+		
+		<br/>
+		Device UUID: <span id="deviceUUID"></span>
+		<br/>
+		<br/>
+		<a href="#" onclick="getNearby();">Get Nearby Restaurants</a><br/>
+		<ul id="nearby">
+		
+		</ul>
+  </body>
+</html>
